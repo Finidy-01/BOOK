@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Supprimer un livre</title>
+</head>
+<body>
+    Vouler vous vraiment supprimer le livre id <span th:text="${livre.id}"></span>
+    <form action="" method="post">
+        <input type="submit" value="Oui">
+        <a th:href="@{/book-library/livre}">Nom</a>
+    </form>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Livres</title>
+</head>
+<body>
+    <div>
+        <table style="border-radius: 1px">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>titre</th>
+                    <th>auteur</th>
+                    <th>isbn</th>
+                    <th>éditeur</th>
+                    <th>date édition</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+    
+            <tbody>
+                <tr th:each="livre: ${livres}">
+                    <td th:text="${livre.id}"></td>
+                    <td th:text="${livre.titre}"></td>
+                    <td th:text="${livre.auteur}"></td>
+                    <td th:text="${livre.isbn}"></td>
+                    <td th:text="${livre.editeur}"></td>
+                    <td th:text="${livre.date_edition}"></td>
+                    <td><a th:href="@{/book-library/livre/{id}/update(id=${livre.id})}">Update</a></td>
+                    <td><a th:href="@{/book-library/livre/{id}/delete(id=${livre.id})}">Delete</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <form th:action="@{/book-library/livre/save}" method="post">
+            <h4>New livre</h4>
+            <select name="auteur">
+                <option th:each="auteur: ${auteurs}" th:value="${auteur.id}" th:text="${auteur.nom}"></option>
+            </select>
+            <input type="text" name="titre" value="haaaa">
+            <input type="text" name="isbn" value="haaaa">
+            <input type="text" name="numero_cote" value="haaaa">
+            <select name="editeur">
+                <option th:each="editeur: ${editeurs}" th:value="${editeur.id}" th:text="${editeur.designation}"></option>
+            </select>
+            <input type="date" name="date_edition" value="2021-01-01">
+            <input type="number" name="tome" value="5">
+            <select name="collection">
+                <option th:each="collection: ${collections}" th:value="${collection.id}" th:text="${collection.designation}"></option>
+            </select>
+            <select name="langue">
+                <option th:each="langue: ${langues}" th:value="${langue.code}" th:text="${langue.designation}"></option>
+            </select>
+            <input type="number" name="nombre_pages" value="5">
+            <input type="submit">
+        </form>
+    </div>
+</body>
+</html>

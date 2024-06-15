@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Library</title>
+</head>
+<body>
+    Tonga soa
+    <p th:text="${id}" ></p>
+    <ul>
+        <li><a th:href="@{/book-library/livre}">livre</a></li>
+        <li><a th:href="@{/book-library/membre}">membre</a></li>
+    </ul>
+</body>
+</html>
