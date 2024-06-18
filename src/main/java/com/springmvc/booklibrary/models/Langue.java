@@ -1,15 +1,16 @@
 package com.springmvc.booklibrary.models;
 
+import com.springmvc.booklibrary.annotations.Mapping;
 import com.springmvc.booklibrary.dao.ModelDao;
 
+@Mapping(table_name = "langue", id_preffix = "", sequence_name = "")
 public class Langue extends ModelDao {
     private String code;
     private String designation;
 
-    public Langue() { super("langue", null, null); }
+    public Langue() { }
 
     public Langue(String code, String designation) {
-        super("langue", null, null);
         this.setCode(code);
         this.setDesignation(designation);
     }

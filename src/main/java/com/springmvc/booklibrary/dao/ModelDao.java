@@ -1,7 +1,6 @@
 package com.springmvc.booklibrary.dao;
 
-import com.springmvc.booklibrary.config.DatabaseConfig;
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.springmvc.booklibrary.annotations.Mapping;
 import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.Field;
@@ -13,56 +12,37 @@ import java.util.List;
 @Repository
 public class ModelDao {
 
-    private JdbcTemplate jdbcTemplate;
-    private String table_name;
-    private String id_prefix;
-    private String sequence_name;
-
-    public JdbcTemplate getJdbcTemplate() {
-        return this.jdbcTemplate;
-    }
-
-    public String getTable_name() {
-        return table_name;
-    }
-
-    public void setTable_name(String table_name) {
-        this.table_name = table_name;
-    }
-
-    public String getId_prefix() {
-        return id_prefix;
-    }
-
-    public void setId_prefix(String id_prefix) {
-        this.id_prefix = id_prefix;
-    }
-
-    public String getSequence_name() {
-        return sequence_name;
-    }
-
-    public void setSequence_name(String sequence_name) {
-        this.sequence_name = sequence_name;
-    }
-
     public ModelDao() {
-        this.jdbcTemplate = DatabaseConfig.getJdbcTemplate();
-    }
-    public ModelDao(String table_name, String id_prefix, String sequence_name) {
-        this.setTable_name(table_name);
-        this.setId_prefix(id_prefix);
-        this.setSequence_name(sequence_name);
-        this.jdbcTemplate = DatabaseConfig.getJdbcTemplate();
     }
 
-    public List<Object> findAll() {
-        String sql = "SELECT * FROM " + this.getTable_name();
-        return this.getJdbcTemplate().query(sql, new ObjectRowMapper(this.getClass()));
+    public boolean isEmpty() throws IllegalAccessException {
+        Field[] parentFields = null;
+        if (this.getClass().getSuperclass() != null) {
+            parentFields = this.getClass().getSuperclass().getDeclaredFields();
+            for (Field field : parentFields) {
+                field.setAccessible(true);
+                if (field.get(this) != null) {
+                    return false;
+                }
+            }
+        }
+
+        Field[] fields = this.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            if (field.get(this) != null) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    public List<Object> find() throws SQLException {
-        Connection con = JdbcService.getConnection();
+    public List<Object> findAll(Connection con) {
+        String sql = "SELECT * FROM " + this.getClass().getAnnotation(Mapping.class).table_name();
+        return JdbcService.query(con, sql, null, new ObjectRowMapper(this.getClass()));
+    }
+
+    public List<Object> find(Connection con) throws SQLException {
         try {
             if (con == null) {
                 return new ArrayList<>();
@@ -80,8 +60,7 @@ public class ModelDao {
                 }
             }
 
-            // INSERT
-            sql.append("SELECT * FROM ").append(this.getTable_name()).append(" WHERE ");
+            sql.append("SELECT * FROM ").append(this.getClass().getAnnotation(Mapping.class).table_name()).append(" WHERE ");
             for (int i = 0; i < setted_fields.size(); i++) {
                 setted_fields.get(i).setAccessible(true);
                 sql.append(setted_fields.get(i).getName()).append(" = ? AND ");
@@ -95,15 +74,16 @@ public class ModelDao {
 
         } catch (Exception e) {
             throw new SQLException("erreur eo amle find" + this.getClass().getName(), e);
-        } finally {
-            con.close();
         }
     }
 
-    public Object get() throws SQLException {
+    public Object get(Connection con) throws SQLException {
         try {
+            if (con == null) {
+                throw new SQLException("connection null");
+            }
 
-            List<Object> all = this.find();
+            List<Object> all = this.find(con);
             if (all.size() > 0) {
                 return all.get(0);
             }
@@ -114,8 +94,7 @@ public class ModelDao {
         }
     }
 
-    public int save() throws SQLException {
-        Connection con = JdbcService.getConnection();
+    public int save(Connection con) throws SQLException {
         try {
             if (con == null) {
                 return 0;
@@ -132,14 +111,14 @@ public class ModelDao {
                     break;
                 }
             }
-            String id_value = "CONCAT('"+ this.getId_prefix() +"', LPAD(CAST(NEXTVAL('"+ this.getSequence_name() +"') AS TEXT), 3, '0'))";
+            String id_value = "CONCAT('"+ this.getClass().getAnnotation(Mapping.class).id_preffix() +"', LPAD(CAST(NEXTVAL('"+ this.getClass().getAnnotation(Mapping.class).sequence_name() +"') AS TEXT), 3, '0'))";
 
             if (idField != null) {
                 idField.setAccessible(true);
                 Object idValue = idField.get(this);
 
                 if (idValue == null) { // INSERT
-                    sql.append("INSERT INTO ").append(this.getTable_name()).append(" (");
+                    sql.append("INSERT INTO ").append(this.getClass().getAnnotation(Mapping.class).table_name()).append(" (");
                     for (Field field : fields) {
                         field.setAccessible(true);
                         sql.append(field.getName()).append(", ");
@@ -157,7 +136,7 @@ public class ModelDao {
                     sql.append(")");
 
                 } else { // UPDATE rehefa tsy misy ny ao amn id
-                    sql.append("UPDATE ").append(this.getTable_name()).append(" SET ");
+                    sql.append("UPDATE ").append(this.getClass().getAnnotation(Mapping.class).table_name()).append(" SET ");
                     for (Field field : fields) {
                         if (!field.equals(idField)) {
                             field.setAccessible(true);
@@ -179,13 +158,10 @@ public class ModelDao {
             return JdbcService.update(con, sql.toString(), values.toArray());
         } catch (Exception e) {
             throw new SQLException("Failed to save instance of " + this.getClass().getName(), e);
-        } finally {
-            con.close();
         }
     }
 
-    public int delete() throws SQLException {
-        Connection con = JdbcService.getConnection();
+    public int delete(Connection con) throws SQLException {
         try {
             if (con == null) {
                 return 0;
@@ -204,14 +180,12 @@ public class ModelDao {
                 idField.setAccessible(true);
                 Object[] values = new Object[1];
                 values[0] = idField.get(this).toString();
-                String sql = "DELETE FROM " + this.getTable_name() + " WHERE id = ?";
+                String sql = "DELETE FROM " + this.getClass().getAnnotation(Mapping.class).table_name() + " WHERE id = ?";
                 return JdbcService.update(con, sql, values);
             }
             return 0;
         } catch (Exception e) {
             throw new SQLException("Tsy vaofafa le " + this.getClass().getName());
-        } finally {
-            con.close();
         }
     }
 

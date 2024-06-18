@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Supprimer un membre</title>
+</head>
+<body>
+    Vouler vous vraiment supprimer le membre id <span th:text="${membre.id}"></span>
+    <form action="" method="post">
+        <input type="submit" value="Oui">
+        <a th:href="@{/book-library/membre}">Nom</a>
+    </form>
+</body>
+</html>

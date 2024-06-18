@@ -1,15 +1,16 @@
 package com.springmvc.booklibrary.models;
 
+import com.springmvc.booklibrary.annotations.Mapping;
 import com.springmvc.booklibrary.dao.ModelDao;
 
+@Mapping(table_name = "collection", id_preffix = "COL", sequence_name = "collection_seq")
 public class Collection extends ModelDao {
     private String id;
     private String designation;
 
-    public Collection() { super("collection", "COL", "collection_seq"); }
+    public Collection() { }
 
     public Collection(String designation) {
-        super("collection", "COL", "collection_seq");
         this.setDesignation(designation);
     }
 

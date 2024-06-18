@@ -1,6 +1,10 @@
 package com.springmvc.booklibrary.models;
 
-public class TypeMembre {
+import com.springmvc.booklibrary.annotations.Mapping;
+import com.springmvc.booklibrary.dao.ModelDao;
+
+@Mapping(table_name = "type_membre", id_preffix = "", sequence_name = "")
+public class TypeMembre extends ModelDao {
     private String id;
     private String designation;
     private Integer coeff_retard;

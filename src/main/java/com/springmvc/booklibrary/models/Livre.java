@@ -1,11 +1,10 @@
 package com.springmvc.booklibrary.models;
 
+import com.springmvc.booklibrary.annotations.Mapping;
 import com.springmvc.booklibrary.dao.ModelDao;
-import org.springframework.stereotype.Component;
-
 import java.sql.Date;
 
-@Component
+@Mapping(table_name = "livre", id_preffix = "LIV", sequence_name = "livre_seq")
 public class Livre extends ModelDao {
     private String id;
     private String titre;
@@ -18,11 +17,12 @@ public class Livre extends ModelDao {
     private String collection;
     private String langue;
     private Integer nombre_pages;
+    private String resume;
 
-    public Livre() { super("livre", "LIV", "livre_seq"); }
+    public Livre() { }
 
-    public Livre(String titre, String auteur, String isbn, String numero_cote, String editeur, Date date_edition, Integer tome, String collection, String langue, Integer nombre_pages) {
-        super("livre", "LIV", "livre_seq");
+    public Livre(String titre, String auteur, String isbn, String numero_cote, String editeur, Date date_edition, Integer tome, String collection, String langue, Integer nombre_pages, String resume) {
+        this.setResume(resume);
         this.setTitre(titre);
         this.setAuteur(auteur);
         this.setIsbn(isbn);
@@ -121,5 +121,13 @@ public class Livre extends ModelDao {
 
     public void setNombre_pages(Integer nombre_pages) {
         this.nombre_pages = nombre_pages;
+    }
+
+    public String getResume() {
+        return resume;
+    }
+
+    public void setResume(String resume) {
+        this.resume = resume;
     }
 }

@@ -266,3 +266,37 @@ VALUES (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Dupon
        (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Girard', 'Emma', 'emma.girard@example.com', '1993-06-17', 'TME001'),
        (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Durand', 'Nicolas', 'nicolas.durand@example.com', '1989-12-05', 'TME004'),
        (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Lefevre', 'Alice', 'alice.lefevre@example.com', '1991-09-27', 'TME002');
+
+-- insert EXEMPLAIRE
+INSERT INTO exemplaire (id, livre, disponible)
+VALUES (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV001', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV001', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV001', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV002', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV002', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV002', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV003', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV003', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV003', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV004', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV004', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV004', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV005', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV005', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV005', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV006', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV006', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV006', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV007', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV007', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV007', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV008', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV008', true),
+       (CONCAT('EXP', LPAD(CAST(NEXTVAL('exemplaire_seq') AS TEXT), 3, '0')), 'LIV008', true);
+
+-- insert REGLE EMPRUNT
+INSERT INTO regle_emprunt (id, livre, type_membre, peut_emprunter, peut_emmener_maison, limite_age, limite_retard)
+VALUES (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV001', 'TME001', true, true, 0, 10),
+       (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV001', 'TME002', true, true, 0, 7),
+       (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV001', 'TME003', true, false, 12, 5),
+       (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV001', 'TME004', true, false, 12, 3);

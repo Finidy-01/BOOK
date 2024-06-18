@@ -3,8 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <title>Livres</title>
+    <script>
+        function removeEmptyInputs(form) {
+            var elements = form.elements;
+            for (var i = elements.length - 1; i >= 0; i--) {
+                var element = elements[i];
+                if (element.type === 'text' && element.value.trim() === '') {
+                    element.parentNode.removeChild(element);
+                }
+                if (element.type === 'number' && element.value.trim() === '') {
+                    element.parentNode.removeChild(element);
+                }
+                if (element.type === 'date' && element.value.trim() === '') {
+                    element.parentNode.removeChild(element);
+                }
+            }
+            return true;
+        }
+    </script>
 </head>
 <body>
+
+    <div>
+        <form th:action="@{/book-library/livre}" method="get" onsubmit="return removeEmptyInputs(this);">
+            <h4>Search livre</h4>
+            <span>id</span>
+            <input type="text" name="id">
+            <span>auteur</span>
+            <input type="text" name="auteur">
+            <span>titre</span>
+            <input type="text" name="titre">
+            <span>isbn</span>
+            <input type="text" name="isbn">
+            <span>numero de cote</span>
+            <input type="text" name="numero_cote">
+            <span>editeur</span>
+            <input type="text" name="editeur">
+            <span>date d'édition</span>
+            <input type="date" name="date_edition">
+            <span>tome</span>
+            <input type="number" name="tome">
+            <span>collection</span>
+            <input type="text" name="collection">
+            <span>langue</span>
+            <input type="text" name="langue">
+            <span>nombre de pages</span>
+            <input type="number" name="nombre_pages">
+            <span>résumé</span>
+            <textarea name="resume"></textarea>
+            <input type="submit">
+        </form>
+    </div>
+
     <div>
         <table style="border-radius: 1px">
             <thead>
@@ -19,7 +69,7 @@
                     <th></th>
                 </tr>
             </thead>
-    
+
             <tbody>
                 <tr th:each="livre: ${livres}">
                     <td th:text="${livre.id}"></td>
@@ -38,24 +88,35 @@
     <div>
         <form th:action="@{/book-library/livre/save}" method="post">
             <h4>New livre</h4>
+            <span>auteur</span>
             <select name="auteur">
                 <option th:each="auteur: ${auteurs}" th:value="${auteur.id}" th:text="${auteur.nom}"></option>
             </select>
+            <span>titre</span>
             <input type="text" name="titre" value="haaaa">
+            <span>isbn</span>
             <input type="text" name="isbn" value="haaaa">
+            <span>numero de cote</span>
             <input type="text" name="numero_cote" value="haaaa">
+            <span>editeur</span>
             <select name="editeur">
                 <option th:each="editeur: ${editeurs}" th:value="${editeur.id}" th:text="${editeur.designation}"></option>
             </select>
+            <span>date d'edition</span>
             <input type="date" name="date_edition" value="2021-01-01">
+            <span>tome</span>
             <input type="number" name="tome" value="5">
+            <span>collection</span>
             <select name="collection">
                 <option th:each="collection: ${collections}" th:value="${collection.id}" th:text="${collection.designation}"></option>
             </select>
+            <span>langue</span>
             <select name="langue">
                 <option th:each="langue: ${langues}" th:value="${langue.code}" th:text="${langue.designation}"></option>
             </select>
+            <span>nombre de pages</span>
             <input type="number" name="nombre_pages" value="5">
+            <textarea name="resume">aaaaaa</textarea>
             <input type="submit">
         </form>
     </div>

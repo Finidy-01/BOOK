@@ -1,20 +1,22 @@
 package com.springmvc.booklibrary.models;
 
+import com.springmvc.booklibrary.annotations.Mapping;
+import com.springmvc.booklibrary.dao.JdbcService;
 import com.springmvc.booklibrary.dao.ModelDao;
-import org.springframework.stereotype.Component;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
-@Component
+@Mapping(table_name = "admin", id_preffix = "ADM", sequence_name = "admin_seq")
 public class Admin extends ModelDao {
     private String id;
     private String email;
     private String password;
 
-    public Admin() { super("admin", "ADM", "admin_seq"); }
+    public Admin() {
+    }
 
     public Admin(String email, String password) {
-        super("admin", "ADM", "admin_seq");
         this.setEmail(email);
         this.setPassword(password);
     }
@@ -44,10 +46,12 @@ public class Admin extends ModelDao {
     }
 
     public String authenticate() throws SQLException {
-        Admin admin = (Admin) this.get();
+        Connection con = JdbcService.getConnection();
+        Admin admin = (Admin) this.get(con);
         if (admin != null) {
             return admin.getId();
         }
+        con.close();
         return null;
     }
 }

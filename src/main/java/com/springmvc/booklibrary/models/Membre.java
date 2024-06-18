@@ -1,8 +1,12 @@
 package com.springmvc.booklibrary.models;
 
+import com.springmvc.booklibrary.annotations.Mapping;
+import com.springmvc.booklibrary.dao.ModelDao;
+
 import java.sql.Date;
 
-public class Membre {
+@Mapping(table_name = "membre", id_preffix = "MBR", sequence_name = "membre_seq")
+public class Membre extends ModelDao {
     private String id;
     private String nom;
     private String prenom;
@@ -57,5 +61,13 @@ public class Membre {
 
     public void setDate_naissance(Date date_naissance) {
         this.date_naissance = date_naissance;
+    }
+
+    public String getType_membre() {
+        return type_membre;
+    }
+
+    public void setType_membre(String type_membre) {
+        this.type_membre = type_membre;
     }
 }

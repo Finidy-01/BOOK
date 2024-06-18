@@ -8,7 +8,6 @@
     Modifier le livre id <span th:text="${livre.id}"></span>
     <div>
         <form th:action="@{/book-library/livre/save}" method="post">
-            <h4>New livre</h4>
             <input type="hidden" name="id" th:value="${livre.id}">
             <select name="auteur">
                 <option th:each="auteur: ${auteurs}" th:value="${auteur.id}" th:text="${auteur.nom}" th:selected="${auteur.id == livre.auteur}"></option>

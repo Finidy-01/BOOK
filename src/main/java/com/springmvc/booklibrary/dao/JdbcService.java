@@ -1,5 +1,6 @@
 package com.springmvc.booklibrary.dao;
 
+import com.springmvc.booklibrary.models.Livre;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.*;
@@ -30,8 +31,10 @@ public class JdbcService {
         try {
             preparedStatement = con.prepareStatement(sql);
 
-            for (int i = 0; i < values.length; i++) {
-                preparedStatement.setObject(i + 1, values[i]);
+            if (values != null) {
+                for (int i = 0; i < values.length; i++) {
+                    preparedStatement.setObject(i + 1, values[i]);
+                }
             }
 
             resultSet = preparedStatement.executeQuery();
@@ -55,6 +58,36 @@ public class JdbcService {
         }
 
         return results;
+
+    }
+    public static List query(Connection con, String sql, RowMapper rowMapper) {
+        List<Object> result = new ArrayList();
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            statement = con.createStatement();
+            resultSet = statement.executeQuery(sql);
+            int rowNum = 0;
+            while (resultSet.next()) {
+                result.add(rowMapper.mapRow(resultSet, rowNum++));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
 
     }
 

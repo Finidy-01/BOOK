@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modier un membre</title>
+</head>
+<body>
+    Modifier le livre id <span th:text="${membre.id}"></span>
+    <div>
+        <form th:action="@{/book-library/membre/save}" method="post">
+            <input type="hidden" name="id" th:value="${membre.id}">
+            <select name="type_membre">
+                <option th:each="typeMembre: ${typeMembres}" th:value="${typeMembre.id}" th:text="${typeMembre.designation}" th:selected="${typeMembre.id == membre.type_membre}"></option>
+            </select>
+            <input type="text" name="nom" th:value="${membre.nom}">
+            <input type="text" name="prenom" th:value="${membre.prenom}">
+            <input type="email" name="email" th:value="${membre.email}">
+            <input type="date" name="date_naissance" th:value="${membre.date_naissance}">
+            <input type="submit">
+        </form>
+    </div>
+</body>
+</html>
