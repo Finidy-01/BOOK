@@ -1,7 +1,6 @@
 package com.springmvc.booklibrary.models;
 
 import com.springmvc.booklibrary.annotations.Mapping;
-import com.springmvc.booklibrary.dao.JdbcService;
 import com.springmvc.booklibrary.dao.ModelDao;
 
 import java.sql.Connection;
@@ -45,13 +44,21 @@ public class Admin extends ModelDao {
         this.password = password;
     }
 
-    public String authenticate() throws SQLException {
-        Connection con = JdbcService.getConnection();
+    public String authenticate(Connection con) throws SQLException {
         Admin admin = (Admin) this.get(con);
         if (admin != null) {
             return admin.getId();
         }
-        con.close();
         return null;
+    }
+
+    public boolean isAdmin(Connection con) throws SQLException {
+        this.setPassword(null);
+        this.setId(null);
+        Admin admin = (Admin) this.get(con);
+        if (admin == null) {
+            return false;
+        }
+        return true;
     }
 }

@@ -1,17 +1,21 @@
 package com.springmvc.booklibrary.models;
 
-public class RegleEmprunt {
+import com.springmvc.booklibrary.annotations.Mapping;
+import com.springmvc.booklibrary.dao.ModelDao;
+
+@Mapping(table_name = "regle_emprunt", id_preffix = "REM", sequence_name = "rglemprunt_seq")
+public class RegleEmprunt extends ModelDao {
     private String id;
     private String livre;
     private String type_membre;
-    private boolean peut_emprunter;
-    private boolean peut_emmener_maison;
+    private Boolean peut_emprunter;
+    private Boolean peut_emmener_maison;
     private Integer limite_age;
     private Integer limite_retard;
 
     public RegleEmprunt() {}
 
-    public RegleEmprunt(String livre, String type_membre, boolean peut_emprunter, boolean peut_emmener_maison, Integer limite_age, Integer limite_retard) {
+    public RegleEmprunt(String livre, String type_membre, Boolean peut_emprunter, Boolean peut_emmener_maison, Integer limite_age, Integer limite_retard) {
         this.setLivre(livre);
         this.setType_membre(type_membre);
         this.setPeut_emprunter(peut_emprunter);
@@ -36,19 +40,19 @@ public class RegleEmprunt {
         this.type_membre = type_membre;
     }
 
-    public boolean isPeut_emprunter() {
+    public Boolean isPeut_emprunter() {
         return peut_emprunter;
     }
 
-    public void setPeut_emprunter(boolean peut_emprunter) {
+    public void setPeut_emprunter(Boolean peut_emprunter) {
         this.peut_emprunter = peut_emprunter;
     }
 
-    public boolean isPeut_emmener_maison() {
+    public Boolean isPeut_emmener_maison() {
         return peut_emmener_maison;
     }
 
-    public void setPeut_emmener_maison(boolean peut_emmener_maison) {
+    public void setPeut_emmener_maison(Boolean peut_emmener_maison) {
         this.peut_emmener_maison = peut_emmener_maison;
     }
 

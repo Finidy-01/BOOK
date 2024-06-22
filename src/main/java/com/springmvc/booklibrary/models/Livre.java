@@ -1,8 +1,14 @@
 package com.springmvc.booklibrary.models;
 
 import com.springmvc.booklibrary.annotations.Mapping;
+import com.springmvc.booklibrary.dao.JdbcService;
 import com.springmvc.booklibrary.dao.ModelDao;
+import com.springmvc.booklibrary.dao.ObjectRowMapper;
+
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.SQLException;
+import java.util.List;
 
 @Mapping(table_name = "livre", id_preffix = "LIV", sequence_name = "livre_seq")
 public class Livre extends ModelDao {
@@ -19,7 +25,8 @@ public class Livre extends ModelDao {
     private Integer nombre_pages;
     private String resume;
 
-    public Livre() { }
+    public Livre() {
+    }
 
     public Livre(String titre, String auteur, String isbn, String numero_cote, String editeur, Date date_edition, Integer tome, String collection, String langue, Integer nombre_pages, String resume) {
         this.setResume(resume);
@@ -129,5 +136,37 @@ public class Livre extends ModelDao {
 
     public void setResume(String resume) {
         this.resume = resume;
+    }
+
+    public boolean isDispo(Connection con) throws SQLException {
+        Exemplaire exemplaire = new Exemplaire();
+        exemplaire.setLivre(this.getId());
+        List exemplaires = exemplaire.find(con);
+        System.out.println(exemplaires.size());
+
+        for (int i = 0; i < exemplaires.size(); i++) {
+            exemplaire = (Exemplaire) exemplaires.get(i);
+            if (exemplaire.isDisponible()) {
+                System.out.println("disponible");
+                return true;
+            }
+        }
+        System.out.println("pas disponible");
+        return false;
+    }
+
+    public Exemplaire getExemplaire(Connection con) throws SQLException {
+        Exemplaire exemplaire = new Exemplaire();
+        exemplaire.setLivre(this.getId());
+        List exemplaires = exemplaire.find(con);
+        System.out.println(this.getId());
+
+        for (int i = 0; i < exemplaires.size(); i++) {
+            exemplaire = (Exemplaire) exemplaires.get(i);
+            if (exemplaire.isDisponible()) {
+                return exemplaire;
+            }
+        }
+        return null;
     }
 }

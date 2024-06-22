@@ -1,19 +1,31 @@
 package com.springmvc.booklibrary.models;
 
-import java.time.LocalDate;
+import com.springmvc.booklibrary.annotations.Mapping;
+import com.springmvc.booklibrary.dao.JdbcService;
+import com.springmvc.booklibrary.dao.ModelDao;
+import com.springmvc.booklibrary.dao.ObjectRowMapper;
 
-public class Emprunt {
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+@Mapping(table_name = "emprunt", id_preffix = "EMP", sequence_name = "emprunt_seq")
+public class Emprunt extends ModelDao {
     private String id;
     private String exemplaire;
     private String membre;
-    private LocalDate date_pret;
-    private LocalDate date_echeance;
-    private LocalDate date_rendu;
+    private Date date_emprunt;
+    private Date date_echeance;
+    private Date date_rendu;
 
-    public Emprunt(String exemplaire, String membre, LocalDate date_pret, LocalDate date_echeance, LocalDate date_rendu) {
+    public Emprunt() {}
+
+    public Emprunt(String exemplaire, String membre, Date date_emprunt, Date date_echeance, Date date_rendu) {
         this.setExemplaire(exemplaire);
         this.setMembre(membre);
-        this.setDate_pret(date_pret);
+        this.setDate_emprunt(date_emprunt);
         this.setDate_echeance(date_echeance);
         this.setDate_rendu(date_rendu);
     }
@@ -42,27 +54,55 @@ public class Emprunt {
         this.membre = membre;
     }
 
-    public LocalDate getDate_pret() {
-        return date_pret;
+    public Date getDate_emprunt() {
+        return date_emprunt;
     }
 
-    public void setDate_pret(LocalDate date_pret) {
-        this.date_pret = date_pret;
+    public void setDate_emprunt(Date date_emprunt) {
+        this.date_emprunt = date_emprunt;
     }
 
-    public LocalDate getDate_echeance() {
+    public Date getDate_echeance() {
         return date_echeance;
     }
 
-    public void setDate_echeance(LocalDate date_echeance) {
+    public void setDate_echeance(Date date_echeance) {
         this.date_echeance = date_echeance;
     }
 
-    public LocalDate getDate_rendu() {
+    public Date getDate_rendu() {
         return date_rendu;
     }
 
-    public void setDate_rendu(LocalDate date_rendu) {
+    public void setDate_rendu(Date date_rendu) {
         this.date_rendu = date_rendu;
+    }
+
+    public void setDate_echeance(int days) {
+        Date new_date_echeance = Date.valueOf(this.getDate_emprunt().toLocalDate().plusDays(days));
+        this.setDate_echeance(new_date_echeance);
+    }
+
+    public int save(Connection con, RegleEmprunt regleEmprunt) throws SQLException {
+        int days = regleEmprunt.getLimite_retard();
+        this.setDate_echeance(days);
+        return super.save(con);
+    }
+
+    public static Emprunt[] getNonRendu(Connection con) {
+        Emprunt[] result = new Emprunt[0];
+        List emprunts = JdbcService.query(con, "SELECT * FROM emprunt WHERE date_rendu IS NULL", new ObjectRowMapper(Emprunt.class));
+        if (emprunts.size() > 0) {
+            result = (Emprunt[]) emprunts.toArray(new Emprunt[0]);
+        }
+        return result;
+    }
+
+    public boolean isPenalized() {
+        return this.getDate_rendu().after(this.getDate_echeance());
+    }
+
+    public int getJourRetard() {
+        return (int) ChronoUnit.DAYS.between(this.getDate_echeance().toLocalDate(), this.getDate_rendu().toLocalDate());
     }
 }

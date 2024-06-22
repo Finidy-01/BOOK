@@ -1,8 +1,6 @@
 package com.springmvc.booklibrary.dao;
 
-import com.springmvc.booklibrary.models.Livre;
 import org.springframework.jdbc.core.RowMapper;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

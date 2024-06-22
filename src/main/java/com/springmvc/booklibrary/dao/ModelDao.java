@@ -125,7 +125,6 @@ public class ModelDao {
                         if (!field.equals(idField)) {
                             values.add(field.get(this));
                         }
-//                        sql.setLength(sql.length() - 2);
                     }
                     sql.setLength(sql.length() - 2); // manala ny ", " am farany
                     sql.append(") VALUES (");

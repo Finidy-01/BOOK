@@ -1,14 +1,23 @@
 package com.springmvc.booklibrary.models;
 
-public class Exemplaire {
+import com.springmvc.booklibrary.annotations.Mapping;
+import com.springmvc.booklibrary.dao.ModelDao;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+@Mapping(table_name = "exemplaire", id_preffix = "EXP", sequence_name = "exemplaire_seq")
+public class Exemplaire extends ModelDao {
     private String id;
     private String livre;
-    private boolean disponible;
+    private Boolean disponible;
 
-    public Exemplaire(String livre, boolean disponible) {
+    public Exemplaire(String livre, Boolean disponible) {
         this.setLivre(livre);
         this.setDisponible(disponible);
     }
+
+    public Exemplaire() {}
 
     public String getId() {
         return id;
@@ -26,11 +35,19 @@ public class Exemplaire {
         this.livre = livre;
     }
 
-    public boolean isDisponible() {
+    public Boolean isDisponible() {
         return disponible;
     }
 
-    public void setDisponible(boolean disponible) {
+    public void setDisponible(Boolean disponible) {
         this.disponible = disponible;
+    }
+
+    public Boolean makeNotDisponible(Connection con) throws SQLException {
+        this.setDisponible(false);
+        if (this.save(con) == 1) {
+            return true;
+        }
+        return false;
     }
 }

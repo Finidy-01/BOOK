@@ -17,6 +17,9 @@
                 if (element.type === 'date' && element.value.trim() === '') {
                     element.parentNode.removeChild(element);
                 }
+                if (element.type === 'textarea' && element.value.trim() === '') {
+                    element.parentNode.removeChild(element);
+                }
             }
             return true;
         }
@@ -67,6 +70,7 @@
                     <th>date édition</th>
                     <th></th>
                     <th></th>
+                    <th></th>
                 </tr>
             </thead>
 
@@ -80,6 +84,7 @@
                     <td th:text="${livre.date_edition}"></td>
                     <td><a th:href="@{/book-library/livre/{id}/update(id=${livre.id})}">Update</a></td>
                     <td><a th:href="@{/book-library/livre/{id}/delete(id=${livre.id})}">Delete</a></td>
+                    <td><a th:href="@{/book-library/emprunt/{id}(id=${livre.id})}">Emprunter</a></td>
                 </tr>
             </tbody>
         </table>

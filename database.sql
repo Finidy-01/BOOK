@@ -63,7 +63,8 @@ create table membre
     email          varchar(50),
     date_naissance date        not null,
     type_membre    varchar     not null,
-    foreign key (type_membre) references type_membre (id)
+    foreign key (type_membre) references type_membre (id),
+    password       varchar
 );
 
 create sequence livre_seq start with 1 increment by 1;
@@ -144,6 +145,17 @@ create table admin
     email    varchar not null,
     password varchar not null
 );
+
+create table penalite
+(
+    id varchar primary key,
+    membre varchar not null,
+    foreign key (membre) references membre (id),
+    date_debut date not null,
+    date_fin date not null
+);
+
+create sequence penalite_seq start with 1 increment by 1;
 
 -- insert ADMIN
 INSERT INTO admin (id, email, password)
@@ -255,17 +267,17 @@ insert into type_membre
 values ('TME004', 'simple', 4);
 
 -- insert MEMBRE
-INSERT INTO membre (id, nom, prenom, email, date_naissance, type_membre)
-VALUES (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Dupont', 'Jean', 'jean.dupont@example.com', '1980-01-15', 'TME002'),
-       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Martin', 'Sophie', 'sophie.martin@example.com', '1992-05-23', 'TME003'),
-       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Bernard', 'Luc', 'luc.bernard@example.com', '1985-03-30', 'TME004'),
-       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Petit', 'Marie', 'marie.petit@example.com', '1990-07-19', 'TME001'),
-       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Leroy', 'Paul', 'paul.leroy@example.com', '1983-11-22', 'TME003'),
-       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Moreau', 'Claire', 'claire.moreau@example.com', '1987-02-13', 'TME004'),
-       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Fournier', 'Julien', 'julien.fournier@example.com', '1995-08-08', 'TME002'),
-       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Girard', 'Emma', 'emma.girard@example.com', '1993-06-17', 'TME001'),
-       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Durand', 'Nicolas', 'nicolas.durand@example.com', '1989-12-05', 'TME004'),
-       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Lefevre', 'Alice', 'alice.lefevre@example.com', '1991-09-27', 'TME002');
+INSERT INTO membre (id, nom, prenom, email, date_naissance, type_membre, password)
+VALUES (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Dupont', 'Jean', 'jean.dupont@example.com', '1980-01-15', 'TME002', '1234'),
+       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Martin', 'Sophie', 'sophie.martin@example.com', '1992-05-23', 'TME003', '1234'),
+       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Bernard', 'Luc', 'luc.bernard@example.com', '1985-03-30', 'TME004', '1234'),
+       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Petit', 'Marie', 'marie.petit@example.com', '1990-07-19', 'TME001', '1234'),
+       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Leroy', 'Paul', 'paul.leroy@example.com', '1983-11-22', 'TME003', '1234'),
+       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Moreau', 'Claire', 'claire.moreau@example.com', '1987-02-13', 'TME004', '1234'),
+       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Fournier', 'Julien', 'julien.fournier@example.com', '1995-08-08', 'TME002', '1234'),
+       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Girard', 'Emma', 'emma.girard@example.com', '1993-06-17', 'TME001', '1234'),
+       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Durand', 'Nicolas', 'nicolas.durand@example.com', '1989-12-05', 'TME004', '1234'),
+       (CONCAT('MBR', LPAD(CAST(NEXTVAL('membre_seq') AS TEXT), 3, '0')), 'Lefevre', 'Alice', 'alice.lefevre@example.com', '1991-09-27', 'TME002', '1234');
 
 -- insert EXEMPLAIRE
 INSERT INTO exemplaire (id, livre, disponible)
@@ -300,3 +312,27 @@ VALUES (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'L
        (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV001', 'TME002', true, true, 0, 7),
        (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV001', 'TME003', true, false, 12, 5),
        (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV001', 'TME004', true, false, 12, 3);
+
+-- CREATE OR REPLACE VIEW v_penalite AS
+-- WITH latest_penalties AS (
+--     SELECT DISTINCT ON (membre)
+--         id,
+--         membre,
+--         date_debut,
+--         date_fin,
+--         CURRENT_DATE BETWEEN date_debut AND date_fin AS estPenalise
+--     FROM penalite
+--     ORDER BY membre, date_debut DESC
+-- )
+-- SELECT * FROM latest_penalties;
+-- ;
+
+CREATE OR REPLACE VIEW v_penalite AS
+SELECT DISTINCT ON (membre)
+    id,
+    membre,
+    date_debut,
+    date_fin,
+    CURRENT_DATE BETWEEN date_debut AND date_fin AS estPenalise
+FROM penalite
+ORDER BY membre, date_debut DESC

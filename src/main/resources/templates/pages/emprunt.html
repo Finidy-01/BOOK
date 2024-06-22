@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Emprunt</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <div>
+        <form th:action="@{/book-library/emprunt/save}" method="POST">
+            <h2>Faire un emprunt</h2>
+            <h3 th:if="${message}" th:text="${message}" style="color: red"></h3>
+            <input type="date" name="date_emprunt">
+            <input type="text" id="search-titre" name="search-bar-titre" placeholder="chercher un livre par titre" oninput="searchItems()">
+            <input type="text" id="search-auteur" name="search-bar-auteur" placeholder="chercher un livre par auteur" oninput="searchItems()">
+            <select name="livre" id="selected-livre">
+                <option th:each="livre: ${livres}" th:value="${livre.id}" th:text="${livre.titre}+'-'+${livre.auteur}"></option>
+            </select>
+
+            <input type="text" id="search-nomprenom" name="search-bar-nomprenom" placeholder="chercher un membre par nom ou prenom" oninput="searchMembre()">
+            <input type="text" id="search-email" name="search-bar-email" placeholder="chercher un membre par email" oninput="searchMembre()">
+            <select name="membre" id="selected-membre">
+                <option th:each="membre: ${membres}" th:value="${membre.id}" th:text="${membre.nom}+' '+${membre.prenom}"></option>
+            </select>
+            <input type="checkbox" name="emmenerMaison">
+
+            <input type="submit" value="valider">
+        </form>
+    </div>
+
+    <div>
+        <form th:action="@{/book-library/emprunt/save}" method="POST">
+            <h2>Enregistrer un rendu</h2>
+            <h3 th:if="${message}" th:text="${message}" style="color: red"></h3>
+            <input type="date" name="date_rendu">
+            <select name="id">
+                <option th:each="emprunt: ${emprunts}" th:value="${emprunt.id}" th:text="${emprunt.id}+'-'+${emprunt.membre}+'-'+${emprunt.exemplaire}"></option>
+            </select>
+
+            <input type="submit" value="valider">
+        </form>
+    </div>
+
+    <script>
+        function searchItems() {
+            var titre = $('#search-titre').val();
+            var auteur = $('#search-auteur').val();
+
+            $.ajax({
+                type: 'GET',
+                url: '/book-library/livre/search',
+                data: {
+                    titre: titre,
+                    auteur: auteur
+                },
+                success: function(data) {
+                    var dropdown = $('#selected-livre');
+                    dropdown.empty();
+                    if (data.length > 0) {
+                        dropdown.show();
+                        data.forEach(function(item) {
+                            dropdown.append('<option>' + item.titre + ' - ' + item.auteur + '</option>');
+                        });
+                    } else {
+                        dropdown.hide();
+                    }
+                }
+            });
+
+        }
+
+        function searchMembre() {
+            var nomprenom = $('#search-nomprenom').val();
+            var email = $('#search-email').val();
+
+            $.ajax({
+                type: 'GET',
+                url: '/book-library/membre/search',
+                data: {
+                    nomprenom: nomprenom,
+                    email: email
+                },
+                success: function(data) {
+                    var dropdown = $('#selected-membre');
+                    dropdown.empty();
+                    if (data.length > 0) {
+                        dropdown.show();
+                        data.forEach(function(item) {
+                            dropdown.append('<option>' + item.nom + ' ' + item.prenom + '</option>');
+                        });
+                    } else {
+                        dropdown.hide();
+                    }
+                }
+            });
+
+        }
+
+    </script>
+
+</body>
+</html>
