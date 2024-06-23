@@ -3,6 +3,7 @@ package com.springmvc.booklibrary.controller;
 import com.springmvc.booklibrary.dao.JdbcService;
 import com.springmvc.booklibrary.models.Membre;
 import com.springmvc.booklibrary.models.TypeMembre;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,12 @@ import java.util.List;
 public class MembreController {
 
     @GetMapping
-    public String membreView(Model model) throws SQLException {
+    public String membreView(Model model, HttpSession session) throws SQLException {
+        String idAdmin = (String) session.getAttribute("id");
+        if (idAdmin == null) {
+            return "redirect:/";
+        }
+
         Connection con = JdbcService.getConnection();
 
         Membre membre = new Membre();
@@ -44,7 +50,12 @@ public class MembreController {
     }
 
     @GetMapping("/{id}/update")
-    public String membreUpdateView(@PathVariable("id") String id, Model model) throws SQLException {
+    public String membreUpdateView(@PathVariable("id") String id, Model model, HttpSession session) throws SQLException {
+        String idAdmin = (String) session.getAttribute("id");
+        if (idAdmin == null) {
+            return "redirect:/";
+        }
+
         Connection con = JdbcService.getConnection();
 
         Membre membre = new Membre();
@@ -62,7 +73,12 @@ public class MembreController {
     }
 
     @GetMapping("/{id}/delete")
-    public String membreDeleteView(@PathVariable("id") String id, Model model) throws SQLException {
+    public String membreDeleteView(@PathVariable("id") String id, Model model, HttpSession session) throws SQLException {
+        String idAdmin = (String) session.getAttribute("id");
+        if (idAdmin == null) {
+            return "redirect:/";
+        }
+
         Connection con = JdbcService.getConnection();
 
         Membre membre = new Membre();

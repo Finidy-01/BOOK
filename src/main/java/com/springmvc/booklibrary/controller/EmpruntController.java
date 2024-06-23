@@ -2,6 +2,7 @@ package com.springmvc.booklibrary.controller;
 
 import com.springmvc.booklibrary.dao.JdbcService;
 import com.springmvc.booklibrary.models.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,12 @@ import java.util.List;
 public class EmpruntController {
 
     @GetMapping
-    public String empruntView(@RequestParam(name = "message", required = false) String message, Model model) {
+    public String empruntView(@RequestParam(name = "message", required = false) String message, Model model, HttpSession session) {
+        String idAdmin = (String) session.getAttribute("id");
+        if (idAdmin == null) {
+            return "redirect:/";
+        }
+
         Connection con = JdbcService.getConnection();
 
         Livre livre = new Livre();

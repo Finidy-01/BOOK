@@ -1,0 +1,38 @@
+.my-title {
+    font-family: "Alfa Slab One";
+    color: #20f039;
+}
+
+.my-text {
+    font-family: "Montserrat Medium";
+    color: #ffffff;
+}
+
+.my-form {
+    background-color: #0e0e0e;
+    color: #ffffff;
+}
+.my-form::placeholder {
+    color: #20f039;
+}
+.my-form:focus {
+    box-shadow: none;
+    border-color: #20f039;
+    background-color: #0e0e0e;
+    color: #ffffff;
+}
+
+.my-btn {
+    background-color: #20f039;
+}
+
+.my-active {
+    background-color: #20f039;
+    color: #0e0e0e;
+}
+
+.my-card {
+    background: none;
+    border-color: #20f039;
+    border-width: 1px;
+}

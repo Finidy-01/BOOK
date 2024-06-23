@@ -2,6 +2,7 @@ package com.springmvc.booklibrary.controller;
 
 import com.springmvc.booklibrary.dao.JdbcService;
 import com.springmvc.booklibrary.models.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,12 @@ import java.util.List;
 public class LivreController {
 
     @GetMapping
-    public String livreView(@ModelAttribute LivreSearch search_livre, Model model) throws SQLException, IllegalAccessException {
+    public String livreView(@ModelAttribute LivreSearch search_livre, Model model, HttpSession session) throws SQLException, IllegalAccessException {
+        String idAdmin = (String) session.getAttribute("id");
+        if (idAdmin == null) {
+            return "redirect:/";
+        }
+
         Connection con = JdbcService.getConnection();
 
         if (search_livre.isEmpty()) {
@@ -62,7 +68,12 @@ public class LivreController {
     }
 
     @GetMapping("/{id}")
-    public String livreDetail(@PathVariable("id") String id, Model model) throws SQLException {
+    public String livreDetail(@PathVariable("id") String id, Model model, HttpSession session) throws SQLException {
+        String idAdmin = (String) session.getAttribute("id");
+        if (idAdmin == null) {
+            return "redirect:/";
+        }
+
         Connection con = JdbcService.getConnection();
 
         ExemplaireUsage exemplaire = new ExemplaireUsage();
@@ -78,7 +89,12 @@ public class LivreController {
     }
 
     @GetMapping("/{id}/delete")
-    public String livreDeleteView(@PathVariable("id") String id, Model model) throws SQLException {
+    public String livreDeleteView(@PathVariable("id") String id, Model model, HttpSession session) throws SQLException {
+        String idAdmin = (String) session.getAttribute("id");
+        if (idAdmin == null) {
+            return "redirect:/";
+        }
+
         Connection con = JdbcService.getConnection();
 
         Livre livre = new Livre();
@@ -105,7 +121,12 @@ public class LivreController {
     }
 
     @GetMapping("/{id}/update")
-    public String livreUpdateView(@PathVariable("id") String id, Model model) throws SQLException {
+    public String livreUpdateView(@PathVariable("id") String id, Model model, HttpSession session) throws SQLException {
+        String idAdmin = (String) session.getAttribute("id");
+        if (idAdmin == null) {
+            return "redirect:/";
+        }
+
         Connection con = JdbcService.getConnection();
 
         Livre livre = new Livre();

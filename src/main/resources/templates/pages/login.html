@@ -3,20 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Login - Admin</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
-<body>
+<body class="my-text">
 
-    <div>
-        <form action="" method="post">
-            <h2>Se connecter</h2>
-            <h3 th:if="${error}" th:text="${error}" style="color: red"></h3>
-            <div>
-                <input type="email" name="email" value="admin@gmail.com">
-                <input type="text" name="password" value="admin">
-                <input type="submit" value="Valider">
-            </div>
-        </form>
-    </div>
+<main class="form-login">
+    <form action="" method="post">
+        <h1 class="h3 mb-3 fw-normal my-title">Connectez vous</h1>
+        <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
+        <div class="form-floating">
+            <input type="email" class="my-form form-control" id="floatingInput" name="email" value="admin@gmail.com">
+            <label for="floatingInput">Adresse email</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="my-form form-control" id="floatingPassword" name="password" value="admin">
+            <label for="floatingPassword">Mot de passe</label>
+        </div>
+        <input class="w-100 btn btn-lg my-btn" type="submit" value="Se connecter">
+    </form>
+</main>
 
 </body>
 </html>

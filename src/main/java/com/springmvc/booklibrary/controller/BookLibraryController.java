@@ -1,5 +1,6 @@
 package com.springmvc.booklibrary.controller;
 
+import com.springmvc.booklibrary.models.LivrePlusEmprunte;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,11 +13,15 @@ public class BookLibraryController {
 
     @GetMapping
     public String accueilView(HttpSession session, Model model) {
-        String id = (String) session.getAttribute("id");
-        if (id == null) {
+        String idAdmin = (String) session.getAttribute("id");
+        if (idAdmin == null) {
             return "redirect:/";
         }
-        model.addAttribute("id", id);
+
+        LivrePlusEmprunte livre = new LivrePlusEmprunte();
+        model.addAttribute("livre", livre);
+
+        model.addAttribute("id", idAdmin);
         return "pages/accueil";
     }
 

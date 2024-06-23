@@ -351,3 +351,14 @@ FROM exemplaire e
          e.id = em.exemplaire
 GROUP BY e.id;
 
+-- le livre le plus emprunté
+create view v_livre_plus_emprunte as
+select l.*,
+       count(l.id) as count
+from emprunt em
+         join exemplaire ex on em.exemplaire = ex.id
+         join livre l on ex.livre = l.id
+group by l.id
+order by count desc
+limit 1;
+

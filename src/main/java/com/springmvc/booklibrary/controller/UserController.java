@@ -29,22 +29,14 @@ public class UserController {
     @PostMapping
     public String connect(Admin admin, HttpSession session, Model model) throws SQLException {
         Connection con = JdbcService.getConnection();
-        if (!admin.isAdmin(con)) {
-            Membre membre = new Membre();
-            String id_membre = membre.authenticate(con);
-            con.close();
-            if (id_membre != null) {
-                session.setAttribute("id", id_membre);
-                return "redirect:/book-library";
-            }
-        } else {
-            String id_admin = admin.authenticate(con);
-            con.close();
-            if (id_admin != null) {
-                session.setAttribute("id", id_admin);
-                return "redirect:/book-library";
-            }
+
+        String id_admin = admin.authenticate(con);
+        con.close();
+        if (id_admin != null) {
+            session.setAttribute("id", id_admin);
+            return "redirect:/book-library";
         }
+
         return "redirect:/login?error=Authentification echoue";
     }
 
