@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Livre ' + ${id}"></title>
+</head>
+<body>
+
+    <div>
+        <h3>Exemplaires</h3>
+        <table style="border-radius: 1px">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>usage</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="exemplaire: ${exemplaires}">
+                    <td th:text="${exemplaire.id}"></td>
+                    <td th:text="${exemplaire.usage}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

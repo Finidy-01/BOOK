@@ -30,7 +30,8 @@ public class EmpruntController {
         List<Object> membres = membre.findAll(con);
         model.addAttribute("membres", membres);
 
-        Emprunt[] emprunts = Emprunt.getNonRendu(con);
+        Emprunt emprunt = new Emprunt();
+        List<Object> emprunts = emprunt.findAll(con);
         model.addAttribute("emprunts", emprunts);
 
         if (message != null) {

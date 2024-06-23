@@ -61,6 +61,22 @@ public class LivreController {
         return "redirect:/book-library/livre";
     }
 
+    @GetMapping("/{id}")
+    public String livreDetail(@PathVariable("id") String id, Model model) throws SQLException {
+        Connection con = JdbcService.getConnection();
+
+        ExemplaireUsage exemplaire = new ExemplaireUsage();
+        exemplaire.setLivre(id);
+        List exemplaires = exemplaire.find(con);
+        model.addAttribute("exemplaires", exemplaires);
+
+        model.addAttribute("id", id);
+
+        con.close();
+
+        return "pages/livre-detail";
+    }
+
     @GetMapping("/{id}/delete")
     public String livreDeleteView(@PathVariable("id") String id, Model model) throws SQLException {
         Connection con = JdbcService.getConnection();

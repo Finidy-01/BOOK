@@ -49,7 +49,9 @@ public class ModelDao {
             }
 
             Field[] fields = this.getClass().getDeclaredFields();
+            Field[] parent_fields = this.getClass().getSuperclass().getDeclaredFields();
             List<Field> setted_fields = new ArrayList<>();
+            List<Field> parent_setted_fields = new ArrayList<>();
             List<Object> values = new ArrayList<>();
             StringBuilder sql = new StringBuilder();
 
@@ -59,12 +61,23 @@ public class ModelDao {
                     setted_fields.add(field);
                 }
             }
+            for (Field field : parent_fields) {
+                field.setAccessible(true);
+                if (field.get(this) != null) {
+                    parent_setted_fields.add(field);
+                }
+            }
 
             sql.append("SELECT * FROM ").append(this.getClass().getAnnotation(Mapping.class).table_name()).append(" WHERE ");
             for (int i = 0; i < setted_fields.size(); i++) {
                 setted_fields.get(i).setAccessible(true);
                 sql.append(setted_fields.get(i).getName()).append(" = ? AND ");
                 values.add(setted_fields.get(i).get(this));
+            }
+            for (int i = 0; i < parent_setted_fields.size(); i++) {
+                parent_setted_fields.get(i).setAccessible(true);
+                sql.append(parent_setted_fields.get(i).getName()).append(" = ? AND ");
+                values.add(parent_setted_fields.get(i).get(this));
             }
             sql.setLength(sql.length() - 4); // manala ny "AND " am farany
 

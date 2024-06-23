@@ -335,4 +335,19 @@ SELECT DISTINCT ON (membre)
     date_fin,
     CURRENT_DATE BETWEEN date_debut AND date_fin AS estPenalise
 FROM penalite
-ORDER BY membre, date_debut DESC
+ORDER BY membre, date_debut DESC;
+
+SELECT COUNT(id) FROM emprunt GROUP BY exemplaire;
+
+CREATE or replace VIEW v_usage AS
+SELECT e.id,
+       e.livre,
+       e.disponible,
+       COUNT(em.id) AS usage
+FROM exemplaire e
+         LEFT JOIN
+     emprunt em
+     ON
+         e.id = em.exemplaire
+GROUP BY e.id;
+

@@ -35,12 +35,38 @@
             <h3 th:if="${message}" th:text="${message}" style="color: red"></h3>
             <input type="date" name="date_rendu">
             <select name="id">
-                <option th:each="emprunt: ${emprunts}" th:value="${emprunt.id}" th:text="${emprunt.id}+'-'+${emprunt.membre}+'-'+${emprunt.exemplaire}"></option>
+                <option th:each="emprunt: ${emprunts}" th:if="${emprunt.date_rendu != null}" th:value="${emprunt.id}" th:text="${emprunt.id}+'-'+${emprunt.membre}+'-'+${emprunt.exemplaire}"></option>
             </select>
 
             <input type="submit" value="valider">
         </form>
     </div>
+
+    <table style="border-radius: 1px">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>exemplaire</th>
+            <th>membre</th>
+            <th>date emprunt</th>
+            <th>date limite emprunt</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="emprunt: ${emprunts}">
+            <td th:text="${emprunt.id}"></td>
+            <td th:text="${emprunt.exemplaire}"></td>
+            <td th:text="${emprunt.date_emprunt}"></td>
+            <td th:text="${emprunt.date_echeance}"></td>
+            <td>
+                <span th:if="${emprunt.date_rendu == null}" style="color: red">pas rendu</span>
+                <span th:if="${emprunt.date_rendu != null}" style="color: green" th:text="${emprunt.date_rendu}"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
     <script>
         function searchItems() {

@@ -76,7 +76,7 @@
 
             <tbody>
                 <tr th:each="livre: ${livres}">
-                    <td th:text="${livre.id}"></td>
+                    <td><a th:href="@{/book-library/livre/{id}(id=${livre.id})}" th:text="${livre.id}"></a></td>
                     <td th:text="${livre.titre}"></td>
                     <td th:text="${livre.auteur}"></td>
                     <td th:text="${livre.isbn}"></td>
