@@ -30,9 +30,25 @@
     background-color: #20f039;
     color: #0e0e0e;
 }
+.my-active:hover {
+    color: #ffffff;
+}
 
 .my-card {
     background: none;
     border-color: #20f039;
     border-width: 1px;
+}
+
+.label-small {
+   transform: scale(0.5);
+}
+
+.my-link {
+    text-decoration: underline;
+    color: #ffffff;
+}
+.my-link:hover {
+    text-decoration: underline;
+    color: #20f039;
 }

@@ -1,0 +1,13 @@
+.fixed-left {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px; /* Adjust the width as needed */
+    background-color: #f8f9fa;
+    padding-top: 20px;
+}
+
+.   filtre-input {
+    height: calc(2.5rem + 2px);
+}

@@ -2,6 +2,7 @@ package com.springmvc.booklibrary.controller;
 
 import com.springmvc.booklibrary.dao.JdbcService;
 import com.springmvc.booklibrary.models.Membre;
+import com.springmvc.booklibrary.models.Penalite;
 import com.springmvc.booklibrary.models.TypeMembre;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -70,6 +71,30 @@ public class MembreController {
         con.close();
 
         return "pages/membre-update";
+    }
+
+    @GetMapping("/{id}")
+    public String membreDetailView(@PathVariable("id") String id, Model model, HttpSession session) throws SQLException {
+        String idAdmin = (String) session.getAttribute("id");
+        if (idAdmin == null) {
+            return "redirect:/";
+        }
+
+        Connection con = JdbcService.getConnection();
+
+        Membre membre = new Membre();
+        membre.setId(id);
+        membre = (Membre) membre.get(con);
+        model.addAttribute("membre", membre);
+
+        Penalite penalite = new Penalite();
+        penalite.setMembre(membre.getId());
+        List penalites = penalite.find(con);
+        model.addAttribute("penalites", penalites);
+
+        con.close();
+
+        return "pages/membre-detail";
     }
 
     @GetMapping("/{id}/delete")

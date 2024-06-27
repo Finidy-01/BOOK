@@ -88,6 +88,34 @@ public class JdbcService {
         return result;
 
     }
+    public static Object query(Connection con, String sql) {
+        Object result = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            statement = con.createStatement();
+            resultSet = statement.executeQuery(sql);
+            if (resultSet.next()) {
+                result = resultSet.getObject(1);  // Retrieves the first column's value
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
+    }
 
     public static int update(Connection con, String sql, Object[] values) {
         PreparedStatement preparedStatement = null;

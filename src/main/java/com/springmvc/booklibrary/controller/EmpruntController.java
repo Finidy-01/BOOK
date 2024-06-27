@@ -51,6 +51,9 @@ public class EmpruntController {
     public String empruntSave(Emprunt emprunt, @RequestParam(name = "livre", required = false) String idLivre, @RequestParam(name = "emmenerMaison", required = false) String emmenerMaison) throws SQLException {
         Connection con = JdbcService.getConnection();
 
+        Livre livre = new Livre();
+        livre.setId(idLivre);
+
         String message = "";
 
         // mi enregistre date rendu de livre
@@ -81,6 +84,11 @@ public class EmpruntController {
 
                 message += " avec penalite";
             }
+            Exemplaire exemplaire = new Exemplaire();
+            exemplaire.setId(emprunt.getExemplaire());
+            exemplaire = (Exemplaire) exemplaire.get(con);
+            exemplaire.setDisponible(true);
+            exemplaire.save(con);
             emprunt.save(con);
             con.close();
             return "redirect:/book-library/emprunt?message=" + message;
@@ -95,9 +103,6 @@ public class EmpruntController {
             message = "membre penalise";
             return "redirect:/book-library/emprunt?message=" + message;
         }
-
-        Livre livre = new Livre();
-        livre.setId(idLivre);
 
         if (!livre.isDispo(con)) {
             con.close();
@@ -124,6 +129,12 @@ public class EmpruntController {
             regleEmprunt.setType_membre(membre.getType_membre());
             regleEmprunt = (RegleEmprunt) regleEmprunt.get(con);
 
+            if (result == 3) {
+                System.out.println("pas de regle");
+                message = "emprunt annule, pas de regle";
+                return "redirect:/book-library/emprunt?message=" + message;
+            }
+
             if (emprunt.save(con, regleEmprunt) > 0) {
                 exemplaire.setDisponible(false);
                 exemplaire.save(con);
@@ -141,11 +152,7 @@ public class EmpruntController {
                 message = "emprunt accepté, peut emmener à la maison";
                 return "redirect:/book-library/emprunt?message=" + message;
             }
-            if (result == 3) {
-                System.out.println("pas de regle");
-                message = "emprunt accepté, pas de règle";
-                return "redirect:/book-library/emprunt?message=" + message;
-            }
+
         }
 
         return "redirect:/book-library/emprunt";

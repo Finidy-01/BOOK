@@ -1,6 +1,7 @@
 package com.springmvc.booklibrary.dao;
 
 import com.springmvc.booklibrary.annotations.Mapping;
+import com.springmvc.booklibrary.models.*;
 import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.Field;
@@ -39,6 +40,15 @@ public class ModelDao {
 
     public List<Object> findAll(Connection con) {
         String sql = "SELECT * FROM " + this.getClass().getAnnotation(Mapping.class).table_name();
+        if (this instanceof Penalite) {
+            sql = sql + " order by date_fin";
+        }
+        if (this instanceof Emprunt) {
+            sql = sql + " order by date_emprunt";
+        }
+        if (this instanceof Livre || this instanceof Exemplaire || this instanceof Membre) {
+            sql = sql + " order by id";
+        }
         return JdbcService.query(con, sql, null, new ObjectRowMapper(this.getClass()));
     }
 
@@ -80,6 +90,17 @@ public class ModelDao {
                 values.add(parent_setted_fields.get(i).get(this));
             }
             sql.setLength(sql.length() - 4); // manala ny "AND " am farany
+
+//          order by
+            if (this instanceof Penalite) {
+                sql.append(" order by date_fin");
+            }
+            if (this instanceof Emprunt) {
+                sql.append(" order by date_emprunt");
+            }
+            if (this instanceof Livre || this instanceof Exemplaire || this instanceof Membre) {
+                sql.append(" order by id");
+            }
 
             System.out.println(sql.toString());
 

@@ -1,3 +1,5 @@
+create database book_library;
+
 create sequence auteur_seq start with 1 increment by 1;
 
 create table auteur
@@ -312,6 +314,43 @@ VALUES (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'L
        (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV001', 'TME002', true, true, 0, 7),
        (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV001', 'TME003', true, false, 12, 5),
        (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV001', 'TME004', true, false, 12, 3);
+INSERT INTO regle_emprunt (id, livre, type_membre, peut_emprunter, peut_emmener_maison, limite_age, limite_retard)
+VALUES
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV002', 'TME001', true, true, 5, 8),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV002', 'TME002', false, true, 10, 5),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV002', 'TME003', true, false, 8, 2),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV002', 'TME004', false, false, 15, 7),
+
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV003', 'TME001', true, true, 3, 6),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV003', 'TME002', false, false, 12, 4),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV003', 'TME003', true, false, 6, 10),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV003', 'TME004', false, true, 14, 9),
+
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV004', 'TME001', true, false, 7, 1),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV004', 'TME002', true, true, 11, 8),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV004', 'TME003', false, true, 9, 3),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV004', 'TME004', true, false, 13, 4),
+
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV005', 'TME001', false, true, 4, 5),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV005', 'TME002', true, false, 10, 2),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV005', 'TME003', false, false, 8, 9),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV005', 'TME004', true, true, 6, 7),
+
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV006', 'TME001', true, true, 2, 10),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV006', 'TME002', false, false, 14, 6),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV006', 'TME003', true, false, 5, 3),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV006', 'TME004', false, true, 9, 8),
+
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV007', 'TME001', true, false, 6, 4),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV007', 'TME002', true, true, 13, 1),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV007', 'TME003', false, true, 10, 7),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV007', 'TME004', false, false, 12, 2),
+
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV008', 'TME001', true, true, 7, 5),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV008', 'TME002', false, true, 4, 9),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV008', 'TME003', true, false, 11, 6),
+    (CONCAT('REM', LPAD(CAST(NEXTVAL('rglemprunt_seq') AS TEXT), 3, '0')), 'LIV008', 'TME004', false, false, 8, 3);
+
 
 -- CREATE OR REPLACE VIEW v_penalite AS
 -- WITH latest_penalties AS (
@@ -362,3 +401,15 @@ group by l.id
 order by count desc
 limit 1;
 
+-- membre le plus actif
+create view v_membre_plus_actif as
+select m.*, count(m.id) as count from emprunt em
+join membre m on em.membre = m.id
+group by m.id
+order by count desc
+limit 1;
+
+-- emprunt en cours
+create view v_emprunt_en_cours as
+select count(e.id) from emprunt e
+where e.date_rendu is null;

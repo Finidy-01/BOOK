@@ -9,9 +9,9 @@
 </head>
 <body class="my-text">
 
-<main>
+<main >
 <!-- Sidebar    -->
-    <div class="d-flex flex-column flex-shrink-0 p-3 text-white" style="width: 280px;">
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-white sticky-top" style="width: 280px;">
         <a th:href="@{/book-library}"
            class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <svg class="bi me-2" width="40" height="32">
@@ -55,48 +55,34 @@
             <div class="col">
                 <div class="card my-card">
                     <div class="card-header" style="border-bottom: 1px solid #20f039">
-                        Info
+                        Livre le plus emprunté
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">Special title treatment</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <a href="#" class="btn my-btn">Go somewhere</a>
+                        <h5 class="card-title my-title" th:text="${livre.count}"></h5>
+                        <p class="card-text" th:text="${livre.titre}"></p>
+                        <a th:href="@{book-library/livre/{id}(id=${livre.id})}" class="btn my-btn">Détail</a>
                     </div>
                 </div>
             </div>
             <div class="col">
-                <div class="card">
-                    <div class="card-header">
-                        Featured
+                <div class="card my-card">
+                    <div class="card-header" style="border-bottom: 1px solid #20f039">
+                        Membre le plus actif
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">Special title treatment</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <h5 class="card-title my-title" th:text="${membre.count}"></h5>
+                        <p class="card-text" th:text="${membre.nom}+' '+${membre.prenom}"></p>
+                        <a th:href="@{book-library/membre/{id}(id=${membre.id})}" class="btn my-btn">Détail</a>
                     </div>
                 </div>
             </div>
             <div class="col">
-                <div class="card">
-                    <div class="card-header">
-                        Featured
+                <div class="card my-card">
+                    <div class="card-header" style="border-bottom: 1px solid #20f039">
+                        Nombre d'emprunt en cours
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">Special title treatment</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-header">
-                        Featured
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Special title treatment</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <h5 class="card-title my-title" th:text="${empruntEnCour}"></h5>
                     </div>
                 </div>
             </div>

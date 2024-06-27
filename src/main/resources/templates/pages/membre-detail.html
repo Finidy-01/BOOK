@@ -119,21 +119,26 @@
 
     <div class="container-fluid w-75">
         <div class="row">
-            <h2> Livre id <span th:text="${id}" class="my-title"></span></h2>
+            <h2> Membre id <span th:text="${id}" class="my-title"></span></h2>
+            <p th:text="${membre.nom}"></p>
+            <p th:text="${membre.prenom}"></p>
+            <p th:text="${membre.email}"></p>
             <div class="col">
                 <div>
-                    <h3>Exemplaires</h3>
+                    <h3>Penalités</h3>
                     <table class="table" style="border-radius: 1px">
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>usage</th>
+                            <th>début</th>
+                            <th>fin</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="exemplaire: ${exemplaires}">
-                            <td th:text="${exemplaire.id}"></td>
-                            <td th:text="${exemplaire.usage}"></td>
+                        <tr th:each="penalite: ${penalites}">
+                            <td th:text="${penalite.id}"></td>
+                            <td th:text="${penalite.date_debut}"></td>
+                            <td th:text="${penalite.date_fin}"></td>
                         </tr>
                         </tbody>
                     </table>

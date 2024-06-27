@@ -29,6 +29,14 @@ public class ObjectRowMapper implements RowMapper {
                 Object value = rs.getObject(field.getName());
                 field.set(instance, value);
             }
+            Field[] parent_fields = this.getObjectClass().getSuperclass().getDeclaredFields();
+            if (parent_fields != null) {
+                for (Field field : parent_fields) {
+                    field.setAccessible(true);
+                    Object value = rs.getObject(field.getName());
+                    field.set(instance, value);
+                }
+            }
 
             return instance;
 
