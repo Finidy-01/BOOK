@@ -3,6 +3,7 @@ package com.springmvc.booklibrary.models;
 import com.springmvc.booklibrary.annotations.Mapping;
 import com.springmvc.booklibrary.dao.JdbcService;
 import com.springmvc.booklibrary.dao.ObjectRowMapper;
+import com.springmvc.booklibrary.modelsAffichage.LivreAffichage;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -66,10 +67,10 @@ public class LivreSearch extends Livre{
         this.nombre_pages_max = nombre_pages_max;
     }
 
-    public Livre[] search(Connection con) throws SQLException {
+    public LivreAffichage[] search(Connection con) throws SQLException {
         try {
             if (con == null) {
-                return new Livre[0];
+                return new LivreAffichage[0];
             }
 
             StringBuilder sql = new StringBuilder();
@@ -159,10 +160,10 @@ public class LivreSearch extends Livre{
             sql.setLength(sql.length() - 4);
             System.out.println(sql.toString());
 
-            List list = JdbcService.query(con, sql.toString(), new ObjectRowMapper(Livre.class));
-            Livre[] result = new Livre[list.size()];
+            List list = JdbcService.query(con, sql.toString(), new ObjectRowMapper(LivreAffichage.class));
+            LivreAffichage[] result = new LivreAffichage[list.size()];
             for (int i = 0; i < list.size(); i++) {
-                result[i] = (Livre) list.get(i);
+                result[i] = (LivreAffichage) list.get(i);
             }
             return result;
 

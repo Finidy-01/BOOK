@@ -2,6 +2,9 @@ package com.springmvc.booklibrary.controller;
 
 import com.springmvc.booklibrary.dao.JdbcService;
 import com.springmvc.booklibrary.models.*;
+import com.springmvc.booklibrary.modelsAffichage.ExemplaireUsage;
+import com.springmvc.booklibrary.modelsAffichage.LivreAffichage;
+import com.springmvc.booklibrary.modelsAffichage.RegleEmpruntAffichage;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,12 +29,12 @@ public class LivreController {
 
         if (search_livre.isEmpty()) {
             System.out.println("not searching");
-            Livre livre = new Livre();
+            LivreAffichage livre = new LivreAffichage();
             List<Object> livres = livre.findAll(con);
             model.addAttribute("livres", livres);
         } else {
             System.out.println("searching");
-            Livre[] livres = search_livre.search(con);
+            LivreAffichage[] livres = search_livre.search(con);
             model.addAttribute("livres", livres);
         }
 
@@ -81,7 +84,15 @@ public class LivreController {
         List exemplaires = exemplaire.find(con);
         model.addAttribute("exemplaires", exemplaires);
 
-        model.addAttribute("id", id);
+        RegleEmpruntAffichage regleEmpruntAffichage = new RegleEmpruntAffichage();
+        regleEmpruntAffichage.setLivre(id);
+        List<Object> regleEmprunts = regleEmpruntAffichage.find(con);
+        model.addAttribute("regleEmprunts", regleEmprunts);
+
+        Livre livre = new Livre();
+        livre.setId(id);
+        livre = (Livre) livre.get(con);
+        model.addAttribute("livre", livre);
 
         con.close();
 

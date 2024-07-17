@@ -16,6 +16,18 @@ public class ModelDao {
     public ModelDao() {
     }
 
+    private void addOrder(String sql) {
+        if (this instanceof Penalite) {
+            sql = sql + " order by date_fin desc";
+        }
+        if (this instanceof Emprunt) {
+            sql = sql + " order by date_emprunt";
+        }
+        if (this instanceof Livre || this instanceof Exemplaire || this instanceof Membre) {
+            sql = sql + " order by id";
+        }
+    }
+
     public boolean isEmpty() throws IllegalAccessException {
         Field[] parentFields = null;
         if (this.getClass().getSuperclass() != null) {
@@ -40,15 +52,7 @@ public class ModelDao {
 
     public List<Object> findAll(Connection con) {
         String sql = "SELECT * FROM " + this.getClass().getAnnotation(Mapping.class).table_name();
-        if (this instanceof Penalite) {
-            sql = sql + " order by date_fin";
-        }
-        if (this instanceof Emprunt) {
-            sql = sql + " order by date_emprunt";
-        }
-        if (this instanceof Livre || this instanceof Exemplaire || this instanceof Membre) {
-            sql = sql + " order by id";
-        }
+        addOrder(sql);
         return JdbcService.query(con, sql, null, new ObjectRowMapper(this.getClass()));
     }
 
@@ -91,20 +95,10 @@ public class ModelDao {
             }
             sql.setLength(sql.length() - 4); // manala ny "AND " am farany
 
-//          order by
-            if (this instanceof Penalite) {
-                sql.append(" order by date_fin");
-            }
-            if (this instanceof Emprunt) {
-                sql.append(" order by date_emprunt");
-            }
-            if (this instanceof Livre || this instanceof Exemplaire || this instanceof Membre) {
-                sql.append(" order by id");
-            }
-
-            System.out.println(sql.toString());
-
-            return JdbcService.query(con, sql.toString(), values.toArray(), new ObjectRowMapper(this.getClass()));
+            String finalSql = sql.toString();
+            addOrder(finalSql);
+            System.out.println(finalSql);
+            return JdbcService.query(con, finalSql, values.toArray(), new ObjectRowMapper(this.getClass()));
 
         } catch (Exception e) {
             throw new SQLException("erreur eo amle find" + this.getClass().getName(), e);

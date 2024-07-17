@@ -4,6 +4,7 @@ import com.springmvc.booklibrary.dao.JdbcService;
 import com.springmvc.booklibrary.models.Membre;
 import com.springmvc.booklibrary.models.Penalite;
 import com.springmvc.booklibrary.models.TypeMembre;
+import com.springmvc.booklibrary.modelsAffichage.MembreAffichage;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +27,7 @@ public class MembreController {
 
         Connection con = JdbcService.getConnection();
 
-        Membre membre = new Membre();
+        MembreAffichage membre = new MembreAffichage();
         List<Object> membres = membre.findAll(con);
         model.addAttribute("membres", membres);
 
@@ -82,9 +83,9 @@ public class MembreController {
 
         Connection con = JdbcService.getConnection();
 
-        Membre membre = new Membre();
+        MembreAffichage membre = new MembreAffichage();
         membre.setId(id);
-        membre = (Membre) membre.get(con);
+        membre = (MembreAffichage) membre.get(con);
         model.addAttribute("membre", membre);
 
         Penalite penalite = new Penalite();

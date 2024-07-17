@@ -253,7 +253,7 @@ values (CONCAT('LIV', LPAD(CAST(NEXTVAL('livre_seq') AS TEXT), 3, '0')), 'Le Pet
 
 insert into livre (id, titre, auteur, isbn, numero_cote, editeur, date_edition, tome, collection, langue, nombre_pages,
                    resume)
-values (CONCAT('LIV', LPAD(CAST(NEXTVAL('livre_seq') AS TEXT), 3, '0')), 'L''Étranger', 'AUT004', '9782070360024',
+values (CONCAT('LIV', LPAD(CAST(NEXTVAL('livre_seq') AS TEXT), 3, '0')), 'L''Etranger', 'AUT004', '9782070360024',
         'C4-001',
         'EDI004', '1942-05-19', null, null, 'FR', 159,
         'A novel by Albert Camus.');

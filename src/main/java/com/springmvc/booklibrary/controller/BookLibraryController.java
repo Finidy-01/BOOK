@@ -1,8 +1,8 @@
 package com.springmvc.booklibrary.controller;
 
 import com.springmvc.booklibrary.dao.JdbcService;
-import com.springmvc.booklibrary.models.LivrePlusEmprunte;
-import com.springmvc.booklibrary.models.MembrePlusActif;
+import com.springmvc.booklibrary.modelsAffichage.LivrePlusEmprunte;
+import com.springmvc.booklibrary.modelsAffichage.MembrePlusActif;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 
 @Controller
@@ -26,11 +27,19 @@ public class BookLibraryController {
         Connection con = JdbcService.getConnection();
 
         LivrePlusEmprunte livre = new LivrePlusEmprunte();
-        livre = (LivrePlusEmprunte) livre.findAll(con).get(0);
+        List livres = livre.findAll(con);
+        if (livres.size() > 0) {
+            livre = (LivrePlusEmprunte) livres.get(0);
+        }
+        livre = (LivrePlusEmprunte) livres.get(0);
         model.addAttribute("livre", livre);
+        model.addAttribute("livres", livres);
 
         MembrePlusActif membre = new MembrePlusActif();
-        membre = (MembrePlusActif) membre.findAll(con).get(0);
+        List membres = membre.findAll(con);
+        if (membres.size() > 0) {
+            membre = (MembrePlusActif) membres.get(0);
+        }
         model.addAttribute("membre", membre);
 
         Long empruntEnCour = (Long) JdbcService.query(con, "select * from v_emprunt_en_cours");

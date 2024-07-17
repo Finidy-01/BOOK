@@ -4,6 +4,7 @@ import com.springmvc.booklibrary.annotations.Mapping;
 import com.springmvc.booklibrary.dao.JdbcService;
 import com.springmvc.booklibrary.dao.ModelDao;
 import com.springmvc.booklibrary.dao.ObjectRowMapper;
+import com.springmvc.booklibrary.exceptions.EmpruntException;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -128,41 +129,116 @@ public class Membre extends ModelDao {
         return null;
     }
 
-    public int peutEmprunter(Connection con, Livre livre, boolean veutEmmenerMaison) throws SQLException {
+    public void peutEmprunter(Connection con, Livre livre, boolean veutEmmenerMaison) throws SQLException {
+        if (this.estPenalise()) {
+            throw new EmpruntException("membre penalise");
+        }
 
-        RegleEmprunt regle = new RegleEmprunt();
-        regle.setLivre(livre.getId());
-        regle.setType_membre(this.getType_membre());
-        regle = (RegleEmprunt) regle.get(con);
+        RegleEmprunt regle = getRegleEmprunt(con, livre);
+
+        if (veutEmmenerMaison) {
+            if (!regle.isPeut_emmener_maison()) {
+                throw new EmpruntException("emprunt non valide, ne peut pas emmener a la maison");
+            }
+        }
 
         if (regle == null) {
-            return 3;
+            throw new EmpruntException("regle non existante, emprunt impossible");
         }
 
         int age = this.getAge();
         int limiteAge = regle.getLimite_age();
         boolean peutEmprunter = regle.isPeut_emprunter();
-        boolean peutEmmenerMaison = regle.isPeut_emmener_maison();
 
         if (!peutEmprunter) {
-            return -1;
+            throw new EmpruntException("emprunt non autorise");
         }
 
         if (age < limiteAge) {
-            return 0;
+            throw new EmpruntException("age inferieure a " + age + ", emprunt impossible");
         }
 
-        return peutEmmenerMaison ? 2 : 1;
     }
 
-    public boolean estPenalise(Connection con) throws SQLException {
-        PenaliteMembre penalite = new PenaliteMembre();
-        penalite.setMembre(this.getId());
-        penalite = (PenaliteMembre) penalite.get(con);
-        if (penalite != null) {
-            return penalite.getEstPenalise();
+    public String emprunter(Connection con, Livre livre, Emprunt emprunt, boolean emmenerMaison) throws SQLException {
+        peutEmprunter(con, livre, emmenerMaison);
+
+        RegleEmprunt regleEmprunt = this.getRegleEmprunt(con, livre);
+        Exemplaire exemplaire = livre.getExemplaire(con);
+        emprunt.setExemplaire(exemplaire.getId());
+
+        if (emprunt.save(con, regleEmprunt) > 0) {
+            exemplaire.setDisponible(false);
+            exemplaire.save(con);
         }
-        return false;
+        boolean peutEmmenerMaison = regleEmprunt.isPeut_emmener_maison();
+
+        String message = "peut emprunter";
+        if (peutEmmenerMaison) {
+            message = message + ", peut emmener a la maison";
+        }
+        return message;
+    }
+
+    public RegleEmprunt getRegleEmprunt(Connection con, Livre livre) throws SQLException {
+        RegleEmprunt regle = new RegleEmprunt();
+        regle.setLivre(livre.getId());
+        regle.setType_membre(this.getType_membre());
+        regle = (RegleEmprunt) regle.get(con);
+        System.out.println("////////");
+        System.out.println(regle.isPeut_emprunter());
+        System.out.println(regle.getLivre());
+        System.out.println(regle.getType_membre());
+        System.out.println("////////");
+        System.out.println(this.getType_membre());
+        return regle;
+    }
+
+    public boolean estPenalise() throws SQLException {
+        Connection con = JdbcService.getConnection();
+        Penalite penalite = new Penalite();
+        penalite.setMembre(this.getId());
+        penalite = (Penalite) penalite.get(con);
+        con.close();
+        if (penalite == null) {
+            return false;
+        }
+        return penalite.estEnCours();
+    }
+
+    protected void penaliser(Connection con, Emprunt emprunt) throws SQLException {
+        Penalite penalite = new Penalite();
+        TypeMembre typeMembre = new TypeMembre();
+        typeMembre.setId(this.getType_membre());
+        typeMembre = (TypeMembre) typeMembre.get(con);
+
+        int jour_retard = emprunt.getJourRetard();
+
+        penalite.setMembre(emprunt.getMembre());
+        penalite.setDate_debut(emprunt.getDate_rendu());
+        penalite.setDate_fin(typeMembre.getCoeff_retard()*jour_retard);
+        penalite.save(con);
+    }
+
+    public void rendre(Connection con, Emprunt emprunt) throws SQLException {
+        Date date_rendu = emprunt.getDate_rendu();
+        emprunt.setDate_rendu(null);
+        emprunt = (Emprunt) emprunt.get(con);
+        emprunt.setDate_rendu(date_rendu);
+
+        Exemplaire exemplaire = new Exemplaire();
+        exemplaire.setId(emprunt.getExemplaire());
+        exemplaire = (Exemplaire) exemplaire.get(con);
+        exemplaire.setDisponible(true);
+
+        if (emprunt.save(con) > 0) {
+            exemplaire.save(con);
+        }
+
+        if (emprunt.isPenalized()) {
+            penaliser(con, emprunt);
+            throw new EmpruntException("membre penalise");
+        }
     }
 
 }

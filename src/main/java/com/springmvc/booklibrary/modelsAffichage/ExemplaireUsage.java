@@ -1,6 +1,7 @@
-package com.springmvc.booklibrary.models;
+package com.springmvc.booklibrary.modelsAffichage;
 
 import com.springmvc.booklibrary.annotations.Mapping;
+import com.springmvc.booklibrary.models.Exemplaire;
 
 @Mapping(table_name = "v_usage", id_preffix = "", sequence_name = "")
 public class ExemplaireUsage extends Exemplaire {

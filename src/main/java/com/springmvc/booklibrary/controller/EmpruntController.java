@@ -1,6 +1,7 @@
 package com.springmvc.booklibrary.controller;
 
 import com.springmvc.booklibrary.dao.JdbcService;
+import com.springmvc.booklibrary.exceptions.EmpruntException;
 import com.springmvc.booklibrary.models.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,7 @@ import java.util.List;
 public class EmpruntController {
 
     @GetMapping
-    public String empruntView(@RequestParam(name = "message", required = false) String message, Model model, HttpSession session) {
+    public String empruntView(Model model, HttpSession session) {
         String idAdmin = (String) session.getAttribute("id");
         if (idAdmin == null) {
             return "redirect:/";
@@ -40,10 +41,6 @@ public class EmpruntController {
         List<Object> emprunts = emprunt.findAll(con);
         model.addAttribute("emprunts", emprunts);
 
-        if (message != null) {
-            model.addAttribute("message", message);
-        }
-
         return "pages/emprunt";
     }
 
@@ -54,108 +51,31 @@ public class EmpruntController {
         Livre livre = new Livre();
         livre.setId(idLivre);
 
-        String message = "";
-
-        // mi enregistre date rendu de livre
-        if (emprunt.getId() != null) {
-            message = "emprunt modifie";
-            Date date_rendu = emprunt.getDate_rendu();
-            emprunt.setDate_rendu(null);
-            emprunt = (Emprunt) emprunt.get(con);
-            emprunt.setDate_rendu(date_rendu);
-
-            if (emprunt.isPenalized()) {
-                Membre membre = new Membre();
-                membre.setId(emprunt.getMembre());
-                membre = (Membre) membre.get(con);
-
-                Penalite penalite = new Penalite();
-                TypeMembre typeMembre = new TypeMembre();
-                typeMembre.setId(membre.getType_membre());
-                typeMembre = (TypeMembre) typeMembre.get(con);
-
-                int jour_retard = emprunt.getJourRetard();
-
-                penalite.setMembre(emprunt.getMembre());
-                penalite.setDate_debut(emprunt.getDate_rendu());
-                penalite.setDate_fin(typeMembre.getCoeff_retard()*jour_retard);
-                penalite.save(con);
-                System.out.println(String.valueOf(typeMembre.getCoeff_retard()) + "+" + String.valueOf(jour_retard));
-
-                message += " avec penalite";
-            }
-            Exemplaire exemplaire = new Exemplaire();
-            exemplaire.setId(emprunt.getExemplaire());
-            exemplaire = (Exemplaire) exemplaire.get(con);
-            exemplaire.setDisponible(true);
-            exemplaire.save(con);
-            emprunt.save(con);
-            con.close();
-            return "redirect:/book-library/emprunt?message=" + message;
-        }
-
         Membre membre = new Membre();
         membre.setId(emprunt.getMembre());
         membre = (Membre) membre.get(con);
 
-        if (membre.estPenalise(con)) {
-            con.close();
-            message = "membre penalise";
-            return "redirect:/book-library/emprunt?message=" + message;
-        }
-
-        if (!livre.isDispo(con)) {
-            con.close();
-            message = "livre non disponible";
-            return "redirect:/book-library/emprunt?message=" + message;
-        }
-
-        int result = membre.peutEmprunter(con, livre, (emmenerMaison != null));
-        if (result == 0) {
-            con.close();
-            message = "peut pas emprunter, pas assez vieux";
-            return "redirect:/book-library/emprunt?message=" + message;
-        }
-        if (result == -1) {
-            con.close();
-            message = "peut pas emprunter";
-            return "redirect:/book-library/emprunt?message=" + message;
-        }
-        if (result > 0) {
-            Exemplaire exemplaire = livre.getExemplaire(con);
-            emprunt.setExemplaire(exemplaire.getId());
-            RegleEmprunt regleEmprunt = new RegleEmprunt();
-            regleEmprunt.setLivre(livre.getId());
-            regleEmprunt.setType_membre(membre.getType_membre());
-            regleEmprunt = (RegleEmprunt) regleEmprunt.get(con);
-
-            if (result == 3) {
-                System.out.println("pas de regle");
-                message = "emprunt annule, pas de regle";
-                return "redirect:/book-library/emprunt?message=" + message;
+        // mi enregistre date rendu de livre
+        if (emprunt.getId() != null) {
+            try {
+                membre.rendre(con, emprunt);
+                return "redirect:/book-library/emprunt?message2=rendu enregistre";
+            } catch (EmpruntException e) {
+                return "redirect:/book-library/emprunt?message2=" + e.getMessage();
+            } finally {
+                con.close();
             }
-
-            if (emprunt.save(con, regleEmprunt) > 0) {
-                exemplaire.setDisponible(false);
-                exemplaire.save(con);
-            }
-
-            con.close();
-
-            if (result == 1) {
-                System.out.println("peut emprunter");
-                message = "emprunt accepté";
-                return "redirect:/book-library/emprunt?message=" + message;
-            }
-            if (result == 2) {
-                System.out.println("peut emmener maison");
-                message = "emprunt accepté, peut emmener à la maison";
-                return "redirect:/book-library/emprunt?message=" + message;
-            }
-
         }
 
-        return "redirect:/book-library/emprunt";
+        try {
+            String message = membre.emprunter(con, livre, emprunt, (emmenerMaison != null));
+            return "redirect:/book-library/emprunt?message1=" + message;
+        } catch (EmpruntException e) {
+            return "redirect:/book-library/emprunt?message1=" + e.getMessage();
+        } finally {
+            con.close();
+        }
+
     }
 
 }

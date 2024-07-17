@@ -4,6 +4,7 @@ import com.springmvc.booklibrary.annotations.Mapping;
 import com.springmvc.booklibrary.dao.ModelDao;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Mapping(table_name = "penalite", id_preffix = "PEN", sequence_name = "penalite_seq")
 public class Penalite extends ModelDao {
@@ -56,5 +57,13 @@ public class Penalite extends ModelDao {
     public void setDate_fin(int days) {
         Date new_date_fin = Date.valueOf(this.getDate_debut().toLocalDate().plusDays(days));
         this.setDate_fin(new_date_fin);
+    }
+
+    public boolean estEnCours() {
+        Date currentDate = Date.valueOf(LocalDate.now());
+        if (currentDate.after(this.getDate_debut()) && currentDate.before(this.getDate_fin())) {
+            return true;
+        }
+        return false;
     }
 }

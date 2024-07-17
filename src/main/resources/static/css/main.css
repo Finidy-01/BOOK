@@ -1,15 +1,15 @@
 .my-title {
     font-family: "Alfa Slab One";
-    color: #20f039;
+    color: #ffffff;
 }
 
 .my-text {
-    font-family: "Montserrat Medium";
+    font-family: "Arial Medium";
     color: #ffffff;
 }
 
 .my-form {
-    background-color: #0e0e0e;
+    background-color: #c3824c;
     color: #ffffff;
 }
 .my-form::placeholder {
@@ -17,17 +17,17 @@
 }
 .my-form:focus {
     box-shadow: none;
-    border-color: #20f039;
-    background-color: #0e0e0e;
-    color: #ffffff;
+    border-color: #ffffff;
+    background-color: #ffffff;
+    color: #000000;
 }
 
 .my-btn {
-    background-color: #20f039;
+    background-color: #ffffff;
 }
 
 .my-active {
-    background-color: #20f039;
+    background-color: #ffffff;
     color: #0e0e0e;
 }
 .my-active:hover {
@@ -36,7 +36,7 @@
 
 .my-card {
     background: none;
-    border-color: #20f039;
+    border-color: #ffffff;
     border-width: 1px;
 }
 
@@ -51,4 +51,14 @@
 .my-link:hover {
     text-decoration: underline;
     color: #20f039;
+}
+
+.my-list {
+    background-color: #0e0e0e;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    color-scheme: dark;
 }
